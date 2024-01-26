@@ -1,0 +1,96 @@
+  {
+    policyname          = "POL-DEF-DENY-TAGVM-ROOT-CPL"
+    policy_type         = "Custom"
+    policymode          = "All"
+    display_name        = "Mandate tag for Virtual Machines"
+    description         = "Enforces a specific tag name as a requirement to deploy an Azure Virtual Machine"
+    management_group_id = "7a082108-90dd-41ac-be41-9b8feabee2da"
+    parameters          = <<PARAMETERS
+    {
+	  "tagName": {
+		  "type": "String",
+		  "metadata": {
+		  "displayName": "Tag Name",
+		  "description": "Name of the tag, such as 'environment'"
+		  }
+	  }
+    }
+    PARAMETERS
+
+    metadata = <<METADATA
+    {
+    "category": "Tags"
+    }
+  METADATA
+
+    policy_rule = <<POLICY_RULE
+    {
+		"if": {
+			"allOf": [{
+					"field": "type",
+					"equals": "Microsoft.Compute/virtualMachines"
+				},
+				{
+					"field": "[concat('tags[', parameters('tagName'), ']')]",
+					"exists": "false"
+				}
+			]
+		},
+		"then": {
+			"effect": "deny"
+		}
+
+    }
+
+ POLICY_RULE
+  },
+
+
+
+
+  {
+    policyname          = "POL-DEF-DENY-TAGVMSS-MG-ROOT"
+    policy_type         = "Custom"
+    policymode          = "All"
+    display_name        = "Mandate tag for Virtual Machine Scale Set"
+    description         = "Enforces a specific tag name as a requirement to deploy an Azure Virtual Machine Scale Set"
+    management_group_id = "7a082108-90dd-41ac-be41-9b8feabee2da"
+    parameters          = <<PARAMETERS
+    {
+	  "tagName": {
+		  "type": "String",
+		  "metadata": {
+		  "displayName": "Tag Name",
+		  "description": "Name of the tag, such as 'environment'"
+		  }
+	  }
+    }
+    PARAMETERS
+
+    metadata = <<METADATA
+    {
+    "category": "Tags"
+    }
+  METADATA
+
+    policy_rule = <<POLICY_RULE
+    {
+		"if": {
+			"allOf": [{
+					"field": "type",
+					"equals": "Microsoft.Compute/virtualMachineScaleSets"
+				},
+				{
+					"field": "[concat('tags[', parameters('tagName'), ']')]",
+					"exists": "false"
+				}
+			]
+		},
+		"then": {
+			"effect": "deny"
+		}
+
+    }
+
+ POLICY_RULE
+  },
